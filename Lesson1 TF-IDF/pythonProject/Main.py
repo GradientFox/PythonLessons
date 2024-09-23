@@ -10,7 +10,7 @@ def get_count_unique_words(*file_names) -> dict:
         with open(fileName, 'r', encoding='utf-8') as file:
             text = file.read()
             uniq_words[fileName] = defaultdict(int)
-            for el, num in Counter(text.split()):
+            for el, num in Counter(text.split()).items():
                 uniq_words[fileName][el] += num
     return uniq_words
 
@@ -58,5 +58,6 @@ if __name__ == '__main__':
         'file2',
     ]
     uniq = get_count_unique_words(*files)
+    print(uniq)
     tf_idf = get_tf_idf(*files)
     write_dict_in_console(tf_idf)
