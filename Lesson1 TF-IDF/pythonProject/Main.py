@@ -1,8 +1,21 @@
 from collections import Counter, defaultdict
 from math import log
 
+from typing import Dict
 
-def write_dict_in_console(temp:dict):
+
+def get_count_unique_words(*file_names) -> dict:
+    uniq_words = dict()
+    for fileName in file_names:
+        with open(fileName, 'r', encoding='utf-8') as file:
+            text = file.read()
+            uniq_words[fileName] = defaultdict(int)
+            for el, num in Counter(text.split()).items():
+                uniq_words[fileName][el] += num
+    return uniq_words
+
+
+def write_dict_in_console(temp: dict) -> None:
     for key, value in temp.items():
         print(key)
         for k, v in value.items():
@@ -10,7 +23,8 @@ def write_dict_in_console(temp:dict):
             for a, b in v.items():
                 print(f'\t\t{a}: {b}')
 
-def create_list_texts(file_names) -> dict[str, str]:
+
+def create_list_texts(file_names) -> dict:
     temp = dict()
     for file in file_names:
         f = open(file, 'r', encoding='utf-8')
@@ -19,7 +33,7 @@ def create_list_texts(file_names) -> dict[str, str]:
     return temp
 
 
-def get_tf_idf(*file_names):
+def get_tf_idf(*file_names) -> dict:
     count_files = len(file_names)
     all_texts = create_list_texts(file_names)
     response = {el: dict() for el in file_names}
@@ -39,5 +53,11 @@ def get_tf_idf(*file_names):
 
 
 if __name__ == '__main__':
-    tf_idf = get_tf_idf('file1', 'file2')
+    files = [
+        'file1',
+        'file2',
+    ]
+    uniq = get_count_unique_words(*files)
+    print(uniq)
+    tf_idf = get_tf_idf(*files)
     write_dict_in_console(tf_idf)
