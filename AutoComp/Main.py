@@ -1,5 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as pt
+from tkinter import *
 
 graph = nx.MultiDiGraph()
 
@@ -25,8 +26,8 @@ for node in graph.nodes:
         # использовал заместо sum() len(), но тогда в случаях когда слово встречалось несколько раз,
         # но кроме него самого небыло совпадений, то получалась вероятность больше 1
 
-nx.draw(graph, with_labels = True)
-pt.show()
+# nx.draw(graph, with_labels = True)
+# pt.show()
 
 enter_word = input()
 if enter_word in graph.nodes:
@@ -36,3 +37,32 @@ if enter_word in graph.nodes:
         print("{0} - {1}".format(node, graph[enter_word][node][0]['weight']))
 else:
     print('"{0}" - последовательность не встреачалась в тексте.'.format(enter_word))
+
+id = []
+def char_validate(d, P):
+    if len(id) != 0:
+        c.delete(id[0])
+        id.pop(0)
+    if d == '1' or (d == '0' and len(P) != 0):
+        if P in graph.nodes:
+            t = graph[P]
+            sorted_nodes = sorted(t.keys(), key=lambda x: t[x][0]['weight'], reverse=True)
+            id.append(c.create_text(100, 100, text='\n'.join(
+                ["{0} - {1}".format(node, graph[P][node][0]['weight']) for node in sorted_nodes])))
+        else:
+            id.append(c.create_text(100, 100, text='"{0}" - последовательность не встреачалась в тексте.'.format(P)))
+
+    c.pack()
+    return True
+
+
+root = Tk()
+root.geometry('300x400')
+
+field_check = (root.register(char_validate), "%d", "%P")
+c = Canvas(root)
+
+field = Entry(validate="key", validatecommand=field_check)
+field.pack()
+
+root.mainloop()
