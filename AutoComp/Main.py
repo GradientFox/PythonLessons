@@ -22,21 +22,21 @@ for word in list_text:
 for node in graph.nodes:
     for v in graph[node]:
         temp = graph[node][v][0]
-        temp['weight'] = temp['value'] / sum([graph[node][x][0]['value'] for x in graph[node].keys()])
+        temp['weight'] = temp['value'] / sum([graph[node][x][0]['value'] for x in graph[node]])
         # использовал заместо sum() len(), но тогда в случаях когда слово встречалось несколько раз,
         # но кроме него самого небыло совпадений, то получалась вероятность больше 1
 
 # nx.draw(graph, with_labels = True)
 # pt.show()
 
-enter_word = input()
-if enter_word in graph.nodes:
-    t = graph[enter_word]
-    sorted_nodes = sorted(t.keys(), key=lambda x: t[x][0]['weight'], reverse=True)
-    for node in sorted_nodes:
-        print("{0} - {1}".format(node, graph[enter_word][node][0]['weight']))
-else:
-    print('"{0}" - последовательность не встреачалась в тексте.'.format(enter_word))
+# enter_word = input()
+# if enter_word in graph.nodes:
+#     t = graph[enter_word]
+#     sorted_nodes = sorted(t.keys(), key=lambda x: t[x][0]['weight'], reverse=True)
+#     for node in sorted_nodes:
+#         print("{0} - {1}".format(node, graph[enter_word][node][0]['weight']))
+# else:
+#     print('"{0}" - последовательность не встреачалась в тексте.'.format(enter_word))
 
 id = []
 def char_validate(d, P):
@@ -47,21 +47,22 @@ def char_validate(d, P):
         if P in graph.nodes:
             t = graph[P]
             sorted_nodes = sorted(t.keys(), key=lambda x: t[x][0]['weight'], reverse=True)
-            id.append(c.create_text(100, 100, text='\n'.join(
-                ["{0} - {1}".format(node, graph[P][node][0]['weight']) for node in sorted_nodes])))
+            id.append(c.create_text(200, 100, fill="#FFFAFA", text='\n'.join(
+                ["{0} - {1}".format(node, graph[P][node][0]['weight']) for node in sorted_nodes[0:10]])))
         else:
-            id.append(c.create_text(100, 100, text='"{0}" - последовательность не встреачалась в тексте.'.format(P)))
+            id.append(c.create_text(200, 100, fill="yellow", text='"{0}" - последовательность не встреачалась в тексте.'.format(P)))
 
     c.pack()
     return True
 
 
 root = Tk()
-root.geometry('300x400')
+root.geometry('600x600')
+root.configure(bg='#343536')
 
 field_check = (root.register(char_validate), "%d", "%P")
 c = Canvas(root)
-
+c.configure(bg="#414a4c", highlightthickness = 0)
 field = Entry(validate="key", validatecommand=field_check)
 field.pack()
 
